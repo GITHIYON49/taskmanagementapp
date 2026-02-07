@@ -16,14 +16,13 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
     type: task.type || "TASK",
     priority: task.priority || "MEDIUM",
     assignee: task.assignee?._id || "",
-    due_date: task.due_date ? task.due_date.split('T')[0] : "",
+    due_date: task.due_date ? task.due_date.split("T")[0] : "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
 
-  // ✅ Load all users for assignment
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -55,41 +54,34 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
     setIsSubmitting(true);
 
     try {
-      console.log("💾 Updating task...");
-
-      // ✅ Prepare data - convert empty assignee to null
       const taskData = {
         ...formData,
         assignee: formData.assignee?.trim() ? formData.assignee : null,
       };
 
-      console.log("Task data to send:", taskData);
-
-      // ✅ Update via API
       const response = await taskAPI.update(task._id, taskData);
 
-      console.log("✅ Task updated:", response.data);
+      dispatch(
+        updateTask({
+          projectId: projectId,
+          taskId: task._id,
+          updates: response.data,
+        }),
+      );
 
-      // ✅ Update Redux state
-      dispatch(updateTask({
-        projectId: projectId,
-        taskId: task._id,
-        updates: response.data,
-      }));
-
-      // ✅ Notify parent component
       if (onTaskUpdated) {
         onTaskUpdated(response.data);
       }
 
-      // Show additional message if assignee changed
       const oldAssignee = task.assignee?._id;
       const newAssignee = formData.assignee;
-      
+
       if (newAssignee && newAssignee !== oldAssignee) {
-        const assignedUser = users.find(u => u._id === newAssignee);
+        const assignedUser = users.find((u) => u._id === newAssignee);
         if (assignedUser && newAssignee !== currentUser?._id) {
-          toast.success(`Task reassigned to ${assignedUser.name}. Email notification sent!`);
+          toast.success(
+            `Task reassigned to ${assignedUser.name}. Email notification sent!`,
+          );
         } else {
           toast.success("Task updated successfully!");
         }
@@ -99,7 +91,7 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
 
       onClose();
     } catch (error) {
-      console.error("❌ Failed to update task:", error);
+      console.error("Failed to update task:", error);
       toast.error(error.response?.data?.message || "Failed to update task");
     } finally {
       setIsSubmitting(false);
@@ -107,19 +99,20 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50">
-      <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-2xl text-gray-900 relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 w-full max-w-2xl text-gray-900 relative max-h-[90vh] overflow-y-auto">
         <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10"
           onClick={onClose}
         >
           <XIcon className="size-5" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Edit Task</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 pr-8">
+          Edit Task
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title */}
           <div>
             <label className="block text-sm mb-1 font-medium">
               Task Title <span className="text-red-500">*</span>
@@ -132,18 +125,18 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="block text-sm mb-1 font-medium">Description</label>
+            <label className="block text-sm mb-1 font-medium">
+              Description
+            </label>
             <textarea
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-20 sm:h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          {/* Type & Priority */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Type</label>
               <select
@@ -173,8 +166,7 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
             </div>
           </div>
 
-          {/* Status & Assignee */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Status</label>
               <select
@@ -203,10 +195,12 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
                   className="w-full px-3 py-2 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Unassigned</option>
-                  <option value={currentUser?._id}>Me ({currentUser?.name})</option>
+                  <option value={currentUser?._id}>
+                    Me ({currentUser?.name})
+                  </option>
                   <optgroup label="Other Users">
                     {users
-                      .filter(u => u._id !== currentUser?._id)
+                      .filter((u) => u._id !== currentUser?._id)
                       .map((user) => (
                         <option key={user._id} value={user._id}>
                           {user.name} ({user.email})
@@ -218,27 +212,27 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
             </div>
           </div>
 
-          {/* Due Date */}
           <div>
             <label className="block text-sm mb-1 font-medium">Due Date</label>
             <input
               type="date"
               value={formData.due_date}
               onChange={(e) => handleChange("due_date", e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
+              min={new Date().toISOString().split("T")[0]}
               className="w-full px-3 py-2 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              {formData.due_date && "Reminder email will be sent 24 hours before due date"}
-            </p>
+            {formData.due_date && (
+              <p className="text-xs text-gray-500 mt-1">
+                Reminder email will be sent 24 hours before due date
+              </p>
+            )}
           </div>
 
-          {/* Footer */}
-          <div className="flex justify-end gap-3 pt-2 text-sm">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2 text-sm">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
+              className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
               disabled={isSubmitting}
             >
               Cancel
@@ -246,7 +240,7 @@ const EditTaskDialog = ({ task, projectId, onClose, onTaskUpdated }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
+              className="w-full sm:w-auto px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
             >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>

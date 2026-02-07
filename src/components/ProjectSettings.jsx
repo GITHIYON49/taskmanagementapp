@@ -16,8 +16,8 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
     description: project.description || "",
     status: project.status || "PLANNING",
     priority: project.priority || "MEDIUM",
-    start_date: project.start_date ? project.start_date.split('T')[0] : "",
-    end_date: project.end_date ? project.end_date.split('T')[0] : "",
+    start_date: project.start_date ? project.start_date.split("T")[0] : "",
+    end_date: project.end_date ? project.end_date.split("T")[0] : "",
     progress: project.progress || 0,
   });
 
@@ -37,24 +37,17 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
     setIsSaving(true);
 
     try {
-      console.log("💾 Saving project updates...");
-      
-      // ✅ Update in backend
       const response = await projectAPI.update(project._id, formData);
 
-      console.log("✅ Project updated:", response.data);
-
-      // ✅ Update Redux state
       dispatch(updateProject(response.data));
 
-      // ✅ Notify parent component
       if (onProjectUpdated) {
         onProjectUpdated(response.data);
       }
 
       toast.success("Project updated successfully!");
     } catch (error) {
-      console.error("❌ Failed to update project:", error);
+      console.error("Failed to update project:", error);
       toast.error(error.response?.data?.message || "Failed to update project");
     } finally {
       setIsSaving(false);
@@ -62,87 +55,73 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this project? This action cannot be undone.",
+      )
+    ) {
       return;
     }
 
     try {
-      console.log("🗑️ Deleting project...");
-      
-      // ✅ Delete from backend
       await projectAPI.delete(project._id);
 
-      console.log("✅ Project deleted");
-
-      // ✅ Update Redux state
       dispatch(deleteProject(project._id));
 
       toast.success("Project deleted successfully!");
       navigate("/projects");
     } catch (error) {
-      console.error("❌ Failed to delete project:", error);
+      console.error("Failed to delete project:", error);
       toast.error(error.response?.data?.message || "Failed to delete project");
     }
   };
 
   const handleRemoveMember = async (memberId) => {
-  console.log("=== REMOVE MEMBER DEBUG ===");
-  console.log("Project ID:", project._id);
-  console.log("Member ID to remove:", memberId);
-  console.log("Project members:", project.members);
-  
-  if (!memberId) {
-    toast.error("Invalid member ID");
-    return;
-  }
-
-  if (!confirm("Remove this member from the project?")) {
-    return;
-  }
-
-  try {
-    console.log("Making API call to:", `/projects/${project._id}/members/${memberId}`);
-    
-    const response = await projectAPI.removeMember(project._id, memberId);
-
-    console.log("✅ Response received:", response.data);
-
-    if (onProjectUpdated) {
-      onProjectUpdated(response.data);
+    if (!memberId) {
+      toast.error("Invalid member ID");
+      return;
     }
 
-    toast.success("Member removed successfully!");
-  } catch (error) {
-    console.error("❌ Full error object:", error);
-    console.error("Error response:", error.response);
-    console.error("Error data:", error.response?.data);
-    console.error("Error status:", error.response?.status);
-    
-    const errorMessage = error.response?.data?.message || "Failed to remove member";
-    toast.error(errorMessage);
-  }
-};
+    if (!confirm("Remove this member from the project?")) {
+      return;
+    }
+
+    try {
+      const response = await projectAPI.removeMember(project._id, memberId);
+
+      if (onProjectUpdated) {
+        onProjectUpdated(response.data);
+      }
+
+      toast.success("Member removed successfully!");
+    } catch (error) {
+      console.error("Full error object:", error);
+      console.error("Error response:", error.response);
+      console.error("Error data:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+
+      const errorMessage =
+        error.response?.data?.message || "Failed to remove member";
+      toast.error(errorMessage);
+    }
+  };
 
   const handleMemberAdded = (updatedProject) => {
-    console.log("✅ Member added, updating project");
-    
     if (onProjectUpdated) {
       onProjectUpdated(updatedProject);
     }
-    
+
     toast.success("Member added successfully!");
   };
 
   return (
     <div className="space-y-8">
-      {/* Project Details */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Project Details
         </h2>
 
         <div className="space-y-4">
-          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Project Name
@@ -155,7 +134,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -167,7 +145,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
             />
           </div>
 
-          {/* Status & Priority */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -202,7 +179,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
             </div>
           </div>
 
-          {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -229,7 +205,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
             </div>
           </div>
 
-          {/* Progress */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Progress: {formData.progress}%
@@ -239,12 +214,13 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
               min="0"
               max="100"
               value={formData.progress}
-              onChange={(e) => handleChange("progress", parseInt(e.target.value))}
+              onChange={(e) =>
+                handleChange("progress", parseInt(e.target.value))
+              }
               className="w-full"
             />
           </div>
 
-          {/* Save Button */}
           <button
             onClick={handleSave}
             disabled={isSaving}
@@ -256,7 +232,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
         </div>
       </div>
 
-      {/* Team Members */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">Team Members</h2>
@@ -283,7 +258,7 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
                     src={
                       member.user?.image ||
                       `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        member.user?.name || "User"
+                        member.user?.name || "User",
                       )}&background=3b82f6&color=fff`
                     }
                     alt={member.user?.name}
@@ -293,23 +268,28 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
                     <p className="font-medium text-gray-900">
                       {member.user?.name || "Unknown User"}
                     </p>
-                    <p className="text-sm text-gray-500">{member.user?.email || "No email"}</p>
+                    <p className="text-sm text-gray-500">
+                      {member.user?.email || "No email"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-gray-600">{member.role}</span>
-                  {member.role !== "ADMIN" && project.createdBy?._id !== member.user?._id && (
-                    <button
-                      onClick={() => handleRemoveMember(member.user?._id)}
-                      className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded"
-                      title="Remove member"
-                    >
-                      <UserMinus size={16} />
-                    </button>
-                  )}
+                  {member.role !== "ADMIN" &&
+                    project.createdBy?._id !== member.user?._id && (
+                      <button
+                        onClick={() => handleRemoveMember(member.user?._id)}
+                        className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded"
+                        title="Remove member"
+                      >
+                        <UserMinus size={16} />
+                      </button>
+                    )}
                   {member.role === "ADMIN" && (
-                    <span className="text-xs text-gray-400">(Cannot remove)</span>
+                    <span className="text-xs text-gray-400">
+                      (Cannot remove)
+                    </span>
                   )}
                 </div>
               </div>
@@ -318,7 +298,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
         </div>
       </div>
 
-      {/* Danger Zone */}
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <h2 className="text-lg font-semibold text-red-900 mb-2">Danger Zone</h2>
         <p className="text-sm text-red-700 mb-4">
@@ -333,7 +312,6 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
         </button>
       </div>
 
-      {/* Add Member Dialog */}
       {showAddMember && (
         <AddProjectMember
           projectId={project._id}

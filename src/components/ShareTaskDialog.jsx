@@ -16,7 +16,6 @@ const ShareTaskDialog = ({ task, onClose }) => {
     const loadUsers = async () => {
       try {
         const response = await userAPI.getAll();
-
         const filteredUsers = response.data.filter(
           (u) => u._id !== currentUser?._id && u._id !== task.assignee?._id,
         );
@@ -57,7 +56,7 @@ const ShareTaskDialog = ({ task, onClose }) => {
 
       onClose();
     } catch (error) {
-      console.error("❌ Failed to share task:", error);
+      console.error("Failed to share task:", error);
       toast.error(error.response?.data?.message || "Failed to share task");
     } finally {
       setIsSharing(false);
@@ -65,16 +64,16 @@ const ShareTaskDialog = ({ task, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50">
-      <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-md text-gray-900 relative">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 w-full max-w-md text-gray-900 relative max-h-[90vh] overflow-y-auto">
         <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
         >
           <XIcon className="size-5" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-2 pr-8">
           <Mail size={20} />
           Share Task
         </h2>
@@ -109,11 +108,15 @@ const ShareTaskDialog = ({ task, onClose }) => {
                         )}&background=3b82f6&color=fff`
                       }
                       alt={user.name}
-                      className="w-8 h-8 rounded-full"
+                      className="w-8 h-8 rounded-full flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user.email}
+                      </p>
                     </div>
                   </label>
                 ))
@@ -128,7 +131,7 @@ const ShareTaskDialog = ({ task, onClose }) => {
             <select
               value={permission}
               onChange={(e) => setPermission(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             >
               <option value="view">View Only</option>
               <option value="edit">Can Edit</option>
@@ -143,14 +146,14 @@ const ShareTaskDialog = ({ task, onClose }) => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Add a message to include in the email..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg h-20 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg h-20 focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
               disabled={isSharing}
             >
               Cancel
@@ -158,7 +161,7 @@ const ShareTaskDialog = ({ task, onClose }) => {
             <button
               onClick={handleShare}
               disabled={isSharing || selectedUsers.length === 0}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm"
             >
               {isSharing
                 ? "Sharing..."

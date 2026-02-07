@@ -85,7 +85,7 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
       setShowCreateTask(false);
       setFormData(initialFormState);
     } catch (error) {
-      console.error("❌ Failed to create task:", error);
+      console.error("Failed to create task:", error);
       const message = error.response?.data?.message || "Failed to create task";
       toast.error(message);
     } finally {
@@ -96,16 +96,18 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
   if (!showCreateTask) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50">
-      <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-2xl text-gray-900 relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 w-full max-w-2xl text-gray-900 relative max-h-[90vh] overflow-y-auto">
         <button
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10"
           onClick={() => setShowCreateTask(false)}
         >
           <XIcon className="size-5" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Create New Task</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 pr-8">
+          Create New Task
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -128,11 +130,12 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
             <textarea
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-20 sm:h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Describe the task"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Type</label>
               <select
@@ -162,7 +165,7 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Status</label>
               <select
@@ -217,17 +220,18 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
               min={new Date().toISOString().split("T")[0]}
               className="w-full px-3 py-2 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              {formData.due_date &&
-                "Reminder email will be sent 24 hours before due date"}
-            </p>
+            {formData.due_date && (
+              <p className="text-xs text-gray-500 mt-1">
+                Reminder email will be sent 24 hours before due date
+              </p>
+            )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-2 text-sm">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2 text-sm">
             <button
               type="button"
               onClick={() => setShowCreateTask(false)}
-              className="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
+              className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
               disabled={isSubmitting}
             >
               Cancel
@@ -235,7 +239,7 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
+              className="w-full sm:w-auto px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
             >
               {isSubmitting ? "Creating..." : "Create Task"}
             </button>

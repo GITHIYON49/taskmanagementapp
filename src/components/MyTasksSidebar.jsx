@@ -7,28 +7,25 @@ const MyTasksSidebar = () => {
   const projects = useSelector((state) => state.project?.projects || []);
   const user = useSelector((state) => state.auth?.user);
 
-  // ✅ Get all tasks assigned to current user
   const myTasks = useMemo(() => {
     if (!projects || !Array.isArray(projects) || !user) {
       return [];
     }
 
     return projects.flatMap((project) => {
-      // ✅ Safely check if project has tasks
       if (!project?.tasks || !Array.isArray(project.tasks)) {
         return [];
       }
 
-      // ✅ Filter tasks assigned to current user
       return project.tasks
         .filter((task) => {
           if (!task?.assignee) return false;
-          
-          // Handle both populated and non-populated assignee
-          const assigneeId = typeof task.assignee === 'object' 
-            ? task.assignee._id 
-            : task.assignee;
-          
+
+          const assigneeId =
+            typeof task.assignee === "object"
+              ? task.assignee._id
+              : task.assignee;
+
           return assigneeId?.toString() === user._id?.toString();
         })
         .map((task) => ({
@@ -39,7 +36,6 @@ const MyTasksSidebar = () => {
     });
   }, [projects, user]);
 
-  // ✅ Calculate task counts
   const taskCounts = useMemo(() => {
     return {
       total: myTasks.length,
@@ -49,7 +45,6 @@ const MyTasksSidebar = () => {
     };
   }, [myTasks]);
 
-  // ✅ Get upcoming tasks (sorted by due date)
   const upcomingTasks = useMemo(() => {
     return myTasks
       .filter((task) => task.due_date && task.status !== "COMPLETED")
@@ -71,18 +66,18 @@ const MyTasksSidebar = () => {
 
   return (
     <div className="mt-6 px-3">
-      {/* Header */}
       <div className="px-3 py-2">
         <h3 className="text-xs font-medium uppercase tracking-wider text-gray-500">
           My Tasks
         </h3>
       </div>
 
-      {/* Task Summary */}
       <div className="space-y-2 px-3 mb-4">
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Total</span>
-          <span className="font-semibold text-gray-900">{taskCounts.total}</span>
+          <span className="font-semibold text-gray-900">
+            {taskCounts.total}
+          </span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
@@ -96,18 +91,21 @@ const MyTasksSidebar = () => {
             <AlertCircle className="h-3 w-3 text-amber-500" />
             <span className="text-gray-600">In Progress</span>
           </div>
-          <span className="font-semibold text-amber-600">{taskCounts.inProgress}</span>
+          <span className="font-semibold text-amber-600">
+            {taskCounts.inProgress}
+          </span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-3 w-3 text-green-500" />
             <span className="text-gray-600">Completed</span>
           </div>
-          <span className="font-semibold text-green-600">{taskCounts.completed}</span>
+          <span className="font-semibold text-green-600">
+            {taskCounts.completed}
+          </span>
         </div>
       </div>
 
-      {/* Upcoming Tasks */}
       {upcomingTasks.length > 0 && (
         <>
           <div className="px-3 py-2 border-t border-gray-200">
@@ -162,14 +160,12 @@ const MyTasksSidebar = () => {
         </>
       )}
 
-      {/* No Tasks Message */}
       {myTasks.length === 0 && (
         <div className="px-3 py-8 text-center">
           <p className="text-sm text-gray-500">No tasks assigned to you</p>
         </div>
       )}
 
-      {/* View All Link */}
       {myTasks.length > 0 && (
         <div className="px-3 py-2 border-t border-gray-200">
           <Link

@@ -25,7 +25,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim()) {
       toast.error("Project name is required");
       return;
@@ -64,7 +64,6 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Project Name */}
           <div>
             <label className="block text-sm mb-1 font-medium">
               Project Name <span className="text-red-500">*</span>
@@ -78,7 +77,6 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm mb-1 font-medium">
               Description
@@ -91,7 +89,6 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             />
           </div>
 
-          {/* Status & Priority */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Status</label>
@@ -121,7 +118,6 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             </div>
           </div>
 
-          {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">
@@ -146,7 +142,6 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             </div>
           </div>
 
-          {/* Footer Buttons */}
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2 text-sm">
             <button
               type="button"

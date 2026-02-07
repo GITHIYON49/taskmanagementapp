@@ -8,7 +8,6 @@ import {
   User,
   Settings,
   ChevronDown,
-  Menu,
   X,
 } from "lucide-react";
 import { logout } from "../features/authSlice";
@@ -34,7 +33,6 @@ const Navbar = () => {
   const notificationRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Load notifications
   useEffect(() => {
     const loadNotifications = async () => {
       try {
@@ -53,7 +51,6 @@ const Navbar = () => {
     }
   }, [user]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -74,7 +71,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle Search
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);
@@ -163,8 +159,17 @@ const Navbar = () => {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 sm:h-16 items-center justify-between">
-            
-            {/* Desktop Search Bar */}
+            <Link to="/" className="flex items-center gap-2 lg:hidden">
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded bg-gradient-to-br from-blue-500 to-blue-600">
+                <span className="text-sm sm:text-base font-bold text-white">
+                  T
+                </span>
+              </div>
+              <span className="hidden sm:block text-base sm:text-lg font-bold text-gray-900">
+                TaskManager
+              </span>
+            </Link>
+
             <div
               className="hidden md:block relative flex-1 max-w-md mx-4"
               ref={searchRef}
@@ -183,7 +188,6 @@ const Navbar = () => {
                 />
               </div>
 
-              {/* Search Results Dropdown */}
               {showSearchResults && (
                 <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
                   {searchResults.length === 0 ? (
@@ -225,9 +229,7 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Right Section */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Mobile Search Button */}
               <button
                 onClick={() => setShowMobileSearch(true)}
                 className="md:hidden rounded-lg p-2 text-gray-600 hover:bg-gray-100"
@@ -235,7 +237,6 @@ const Navbar = () => {
                 <Search className="h-5 w-5" />
               </button>
 
-              {/* Notifications */}
               <div className="relative" ref={notificationRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
@@ -304,7 +305,6 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* User Menu */}
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
@@ -370,7 +370,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Search Overlay */}
       {showMobileSearch && (
         <div className="fixed inset-0 bg-white z-50 md:hidden">
           <div className="flex items-center gap-3 p-4 border-b border-gray-200">
@@ -393,7 +392,6 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Search Results */}
           <div className="overflow-y-auto h-[calc(100vh-73px)]">
             {searchResults.length === 0 ? (
               <div className="p-8 text-center text-gray-500 text-sm">

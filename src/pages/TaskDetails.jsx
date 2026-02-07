@@ -65,7 +65,6 @@ const TaskDetails = () => {
         }
 
         const response = await taskAPI.getOne(taskId);
-
         setTask(response.data);
 
         if (response.data.project) {
@@ -76,7 +75,7 @@ const TaskDetails = () => {
           setComments(response.data.comments);
         }
       } catch (error) {
-        console.error("❌ Failed to load task:", error);
+        console.error("Failed to load task:", error);
         toast.error("Task not found");
         navigate(`/projects/${projectId}`);
       } finally {
@@ -95,7 +94,7 @@ const TaskDetails = () => {
         const response = await commentAPI.getAll(taskId);
         setComments(response.data);
       } catch (error) {
-        console.error("❌ Failed to load comments:", error);
+        console.error("Failed to load comments:", error);
       }
     };
 
@@ -128,7 +127,7 @@ const TaskDetails = () => {
       setNewComment("");
       toast.success("Comment added!");
     } catch (error) {
-      console.error("❌ Failed to add comment:", error);
+      console.error("Failed to add comment:", error);
       toast.error("Failed to add comment");
     }
   };
@@ -147,7 +146,6 @@ const TaskDetails = () => {
       formData.append("file", file);
 
       const response = await taskAPI.addAttachment(taskId, formData);
-
       setTask(response.data);
 
       dispatch(
@@ -161,7 +159,7 @@ const TaskDetails = () => {
 
       toast.success("File uploaded!");
     } catch (error) {
-      console.error("❌ Failed to upload file:", error);
+      console.error("Failed to upload file:", error);
       toast.error("Failed to upload file");
     }
   };
@@ -171,7 +169,6 @@ const TaskDetails = () => {
 
     try {
       const response = await taskAPI.removeAttachment(taskId, attachmentId);
-
       setTask(response.data);
 
       dispatch(
@@ -184,7 +181,7 @@ const TaskDetails = () => {
 
       toast.success("Attachment deleted!");
     } catch (error) {
-      console.error("❌ Failed to delete attachment:", error);
+      console.error("Failed to delete attachment:", error);
       toast.error("Failed to delete attachment");
     }
   };
@@ -224,11 +221,13 @@ const TaskDetails = () => {
 
   if (!task) {
     return (
-      <div className="p-6 text-center text-gray-900">
-        <p className="text-3xl md:text-5xl mt-40 mb-10">Task not found</p>
+      <div className="p-4 sm:p-6 text-center text-gray-900">
+        <p className="text-2xl sm:text-3xl md:text-5xl mt-20 sm:mt-40 mb-6 sm:mb-10">
+          Task not found
+        </p>
         <button
           onClick={() => navigate(`/projects/${projectId}`)}
-          className="mt-4 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
         >
           Back to Project
         </button>
@@ -237,21 +236,21 @@ const TaskDetails = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-4">
+    <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+        <div className="flex items-start gap-3 sm:gap-4 w-full sm:w-auto">
           <button
             onClick={() => navigate(`/projects/${projectId}`)}
-            className="mt-1 p-2 hover:bg-gray-100 rounded-lg transition"
+            className="mt-1 p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition flex-shrink-0"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
           </button>
 
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 break-words">
               {task.title}
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span
                 className={`px-2 py-1 rounded text-xs font-medium ${statusColors[task.status]}`}
               >
@@ -271,43 +270,43 @@ const TaskDetails = () => {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
           <button
             onClick={() => setShowEditDialog(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
           >
             <Edit size={16} />
-            Edit
+            <span>Edit</span>
           </button>
           <button
             onClick={() => setShowShareDialog(true)}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
           >
             <Share2 size={16} />
-            Share
+            <span>Share</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3">
               Description
             </h2>
-            <p className="text-gray-700 whitespace-pre-wrap">
+            <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap break-words">
               {task.description || "No description provided"}
             </p>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <MessageSquare size={20} />
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <MessageSquare size={18} className="sm:size-5" />
               Comments ({comments.length})
             </h2>
 
-            <form onSubmit={handleAddComment} className="mb-6">
-              <div className="flex gap-3">
+            <form onSubmit={handleAddComment} className="mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <img
                   src={
                     user?.image ||
@@ -316,19 +315,19 @@ const TaskDetails = () => {
                     )}&background=3b82f6&color=fff`
                   }
                   alt={user?.name}
-                  className="w-10 h-10 rounded-full"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
                 />
                 <div className="flex-1">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
                     rows="3"
                   />
                   <button
                     type="submit"
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                    className="mt-2 w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
                   >
                     Post Comment
                   </button>
@@ -352,12 +351,12 @@ const TaskDetails = () => {
                         )}&background=3b82f6&color=fff`
                       }
                       alt={comment.user?.name}
-                      className="w-10 h-10 rounded-full"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
                     />
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-gray-900">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <span className="font-medium text-gray-900 text-sm">
                             {comment.user?.name}
                           </span>
                           <span className="text-xs text-gray-500">
@@ -369,7 +368,7 @@ const TaskDetails = () => {
                               : "Just now"}
                           </span>
                         </div>
-                        <p className="text-gray-700 text-sm">
+                        <p className="text-gray-700 text-sm break-words">
                           {comment.content}
                         </p>
                       </div>
@@ -380,13 +379,13 @@ const TaskDetails = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Paperclip size={20} />
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Paperclip size={18} className="sm:size-5" />
               Attachments ({task.attachments?.length || 0})
             </h2>
 
-            <label className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mb-4">
+            <label className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mb-4 text-sm">
               <Paperclip size={16} />
               Upload File
               <input
@@ -407,10 +406,10 @@ const TaskDetails = () => {
                     key={attachment._id}
                     className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
                   >
-                    <div className="flex items-center gap-3">
-                      <Paperclip className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {attachment.name}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -418,7 +417,7 @@ const TaskDetails = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <a
                         href={`http://localhost:5000${attachment.url}`}
                         download
@@ -442,9 +441,9 @@ const TaskDetails = () => {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
               Details
             </h2>
 
@@ -466,11 +465,11 @@ const TaskDetails = () => {
                       alt={task.assignee.name}
                       className="w-8 h-8 rounded-full"
                     />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
                         {task.assignee.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 truncate">
                         {task.assignee.email}
                       </p>
                     </div>
@@ -511,15 +510,15 @@ const TaskDetails = () => {
           </div>
 
           {project && (
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
                 Project
               </h2>
               <button
                 onClick={() => navigate(`/projects/${projectId}`)}
                 className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
               >
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-gray-900 truncate">
                   {project.name || "Unknown Project"}
                 </p>
                 {project.description && (

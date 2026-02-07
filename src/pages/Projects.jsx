@@ -21,10 +21,9 @@ export default function Projects() {
     priority: "ALL",
   });
   const [localLoading, setLocalLoading] = useState(true);
-  
+
   const hasLoadedRef = useRef(false);
 
-  // Load projects
   useEffect(() => {
     if (hasLoadedRef.current) {
       setLocalLoading(false);
@@ -34,13 +33,13 @@ export default function Projects() {
     const loadProjects = async () => {
       hasLoadedRef.current = true;
       setLocalLoading(true);
-      
+
       try {
         const response = await projectAPI.getAll();
         const projectsData = Array.isArray(response.data) ? response.data : [];
         dispatch(setProjects(projectsData));
       } catch (error) {
-        console.error("❌ Error loading projects:", error);
+        console.error("Error loading projects:", error);
         dispatch(setProjects([]));
         toast.error("Failed to load projects");
         hasLoadedRef.current = false;
@@ -52,7 +51,6 @@ export default function Projects() {
     loadProjects();
   }, [dispatch]);
 
-  // Filter projects
   useEffect(() => {
     let filtered = [...projects];
 
@@ -60,19 +58,19 @@ export default function Projects() {
       filtered = filtered.filter(
         (project) =>
           project.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          project.description?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     if (filters.status !== "ALL") {
       filtered = filtered.filter(
-        (project) => project.status === filters.status
+        (project) => project.status === filters.status,
       );
     }
 
     if (filters.priority !== "ALL") {
       filtered = filtered.filter(
-        (project) => project.priority === filters.priority
+        (project) => project.priority === filters.priority,
       );
     }
 
@@ -90,7 +88,6 @@ export default function Projects() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
@@ -115,9 +112,7 @@ export default function Projects() {
         setIsDialogOpen={setIsDialogOpen}
       />
 
-      {/* Search & Filters */}
       <div className="space-y-3">
-        {/* Search Bar */}
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
@@ -128,7 +123,6 @@ export default function Projects() {
           />
         </div>
 
-        {/* Filter Toggle Button (Mobile) */}
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="sm:hidden w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -142,13 +136,12 @@ export default function Projects() {
           )}
         </button>
 
-        {/* Filters */}
-        <div className={`${showFilters ? 'flex' : 'hidden'} sm:flex flex-col sm:flex-row gap-3`}>
+        <div
+          className={`${showFilters ? "flex" : "hidden"} sm:flex flex-col sm:flex-row gap-3`}
+        >
           <select
             value={filters.status}
-            onChange={(e) =>
-              setFilters({ ...filters, status: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
             className="flex-1 sm:flex-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="ALL">All Status</option>
@@ -183,7 +176,6 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Projects Grid */}
       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProjects.length === 0 ? (
           <div className="col-span-full py-12 sm:py-16 text-center">

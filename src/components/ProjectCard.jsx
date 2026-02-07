@@ -17,15 +17,16 @@ const ProjectCard = ({ project }) => {
   };
 
   const totalTasks = project.tasks?.length || 0;
-  const completedTasks = project.tasks?.filter((t) => t.status === "COMPLETED").length || 0;
-  const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+  const completedTasks =
+    project.tasks?.filter((t) => t.status === "COMPLETED").length || 0;
+  const progressPercentage =
+    totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
   return (
     <Link
       to={`/projects/${project._id}`}
       className="block bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg transition-shadow"
     >
-      {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 text-base sm:text-lg truncate">
@@ -44,7 +45,6 @@ const ProjectCard = ({ project }) => {
         </span>
       </div>
 
-      {/* Progress Bar */}
       <div className="mb-3 sm:mb-4">
         <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 mb-2">
           <span>Progress</span>
@@ -58,19 +58,21 @@ const ProjectCard = ({ project }) => {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
         <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
           <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
-          <span className="truncate">{completedTasks}/{totalTasks} Tasks</span>
+          <span className="truncate">
+            {completedTasks}/{totalTasks} Tasks
+          </span>
         </div>
         <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
           <Users className="h-4 w-4 flex-shrink-0" />
-          <span className="truncate">{project.members?.length || 0} Members</span>
+          <span className="truncate">
+            {project.members?.length || 0} Members
+          </span>
         </div>
       </div>
 
-      {/* Footer */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 sm:pt-4 border-t border-gray-200">
         <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
           <Calendar className="h-4 w-4 flex-shrink-0" />
@@ -80,7 +82,9 @@ const ProjectCard = ({ project }) => {
               : "No deadline"}
           </span>
         </div>
-        <span className={`text-xs sm:text-sm font-medium ${priorityColors[project.priority]}`}>
+        <span
+          className={`text-xs sm:text-sm font-medium ${priorityColors[project.priority]}`}
+        >
           {project.priority} Priority
         </span>
       </div>

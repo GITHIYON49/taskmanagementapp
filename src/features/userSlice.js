@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dummyUsers } from "../assets/assets";
+
 
 const initialState = {
-  users: dummyUsers || [],
+  users:[],
   loading: false,
 };
 

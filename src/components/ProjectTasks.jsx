@@ -47,7 +47,7 @@ export default function ProjectTasks({ tasks = [], projectId }) {
 
       toast.success("Task status updated!");
     } catch (error) {
-      console.error("❌ Failed to update task:", error);
+      console.error("Failed to update task:", error);
       toast.error("Failed to update task status");
     }
   };
@@ -73,7 +73,7 @@ export default function ProjectTasks({ tasks = [], projectId }) {
       toast.success(`${selectedTasks.size} task(s) deleted`);
       setSelectedTasks(new Set());
     } catch (error) {
-      console.error("❌ Failed to delete tasks:", error);
+      console.error("Failed to delete tasks:", error);
       toast.error("Failed to delete some tasks");
     }
   };
@@ -86,7 +86,7 @@ export default function ProjectTasks({ tasks = [], projectId }) {
       dispatch(deleteTask({ projectId, taskId }));
       toast.success("Task deleted");
     } catch (error) {
-      console.error("❌ Failed to delete task:", error);
+      console.error("Failed to delete task:", error);
       toast.error("Failed to delete task");
     }
   };

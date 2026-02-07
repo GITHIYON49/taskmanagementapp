@@ -34,7 +34,7 @@ const Dashboard = () => {
         const projectsData = Array.isArray(response.data) ? response.data : [];
         dispatch(setProjects(projectsData));
       } catch (error) {
-        console.error("❌ Dashboard: Failed to load projects:", error);
+        console.error("Dashboard: Failed to load projects:", error);
         dispatch(setProjects([]));
         hasLoadedRef.current = false;
       } finally {
@@ -56,7 +56,6 @@ const Dashboard = () => {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">

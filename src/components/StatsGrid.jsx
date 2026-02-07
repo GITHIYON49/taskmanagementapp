@@ -5,18 +5,14 @@ const StatsGrid = () => {
   const projects = useSelector((state) => state.project?.projects || []);
 
   const totalProjects = projects.length;
-  
+
   const completedProjects = projects.filter(
-    (p) => p.status === "COMPLETED"
+    (p) => p.status === "COMPLETED",
   ).length;
 
-  const activeProjects = projects.filter(
-    (p) => p.status === "ACTIVE"
-  ).length;
+  const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
 
-  const onHoldProjects = projects.filter(
-    (p) => p.status === "ON_HOLD"
-  ).length;
+  const onHoldProjects = projects.filter((p) => p.status === "ON_HOLD").length;
 
   const stats = [
     {
@@ -65,7 +61,9 @@ const StatsGrid = () => {
                 {stat.value}
               </p>
             </div>
-            <div className={`rounded-full p-2 sm:p-3 ${stat.bgColor} flex-shrink-0 ml-2`}>
+            <div
+              className={`rounded-full p-2 sm:p-3 ${stat.bgColor} flex-shrink-0 ml-2`}
+            >
               <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
             </div>
           </div>

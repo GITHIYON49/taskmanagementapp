@@ -68,7 +68,7 @@ export default function ProjectDetail() {
         setProject(response.data);
         dispatch(updateSingleProject(response.data));
       } catch (error) {
-        console.error('❌ Failed to load project:', error);
+        console.error('Failed to load project:', error);
         toast.error('Project not found');
         navigate('/projects');
       } finally {
@@ -131,7 +131,7 @@ export default function ProjectDetail() {
 
   return (
     <div className="space-y-4 sm:space-y-5 max-w-7xl mx-auto text-gray-900">
-      {/* Header */}
+      
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start justify-between">
         <div className="flex items-start gap-3 sm:gap-4 w-full sm:w-auto">
           <button
@@ -166,7 +166,7 @@ export default function ProjectDetail() {
         </button>
       </div>
 
-      {/* Info Cards */}
+      
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {[
           {
@@ -207,9 +207,9 @@ export default function ProjectDetail() {
         ))}
       </div>
 
-      {/* Tabs */}
+     
       <div>
-        {/* Tab Navigation - Scrollable on Mobile */}
+       
         <div className="overflow-x-auto -mx-4 sm:mx-0">
           <div className="inline-flex min-w-full sm:min-w-0 px-4 sm:px-0 gap-1 sm:gap-2 border border-gray-200 rounded overflow-hidden">
             {[
@@ -232,7 +232,7 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        {/* Tab Content */}
+        
         <div className="mt-4 sm:mt-6">
           {activeTab === "tasks" && (
             <ProjectTasks tasks={tasks} projectId={projectId} />
@@ -255,7 +255,7 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      {/* Create Task Dialog */}
+      
       {showCreateTask && (
         <CreateTaskDialog
           showCreateTask={showCreateTask}

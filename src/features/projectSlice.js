@@ -55,7 +55,7 @@ const projectSlice = createSlice({
 
       if (project) {
         if (!project.tasks) project.tasks = [];
-        project.tasks.unshift(task); // Add to beginning
+        project.tasks.unshift(task);
       }
     },
 
@@ -77,10 +77,10 @@ const projectSlice = createSlice({
             ...updates,
           };
         } else {
-          console.error("❌ Redux: Task not found");
+          console.error("Redux: Task not found");
         }
       } else {
-        console.error("❌ Redux: Project not found or has no tasks");
+        console.error("Redux: Project not found or has no tasks");
       }
     },
 

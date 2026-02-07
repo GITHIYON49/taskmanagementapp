@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
-const ProjectSidebar = memo(() => {
+const ProjectSidebar = memo(({ onLinkClick }) => {
   const location = useLocation();
   const [expandedProjects, setExpandedProjects] = useState(new Set());
 
@@ -42,39 +42,39 @@ const ProjectSidebar = memo(() => {
   };
 
   return (
-    <div className="mt-6 px-3">
-      <div className="flex items-center justify-between px-3 py-2">
+    <div className="mt-4 sm:mt-6 px-2 sm:px-3">
+      <div className="flex items-center justify-between px-2 sm:px-3 py-2">
         <h3 className="text-xs font-medium uppercase tracking-wider text-gray-500">
           Projects
         </h3>
 
-        <Link to="/projects">
-          <button className="flex size-6 items-center justify-center rounded text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+        <Link to="/projects" onClick={onLinkClick}>
+          <button className="flex size-5 sm:size-6 items-center justify-center rounded text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
             <ArrowRightIcon className="size-3" />
           </button>
         </Link>
       </div>
 
-      <div className="space-y-1 px-3">
+      <div className="space-y-1 px-2 sm:px-3">
         {projects.slice(0, 5).map((project) => (
           <div key={project._id}>
             <button
               onClick={() => toggleProject(project._id)}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
+              className="flex w-full items-center gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
             >
               <ChevronRightIcon
-                className={`size-3 text-gray-500 transition-transform ${
+                className={`size-3 text-gray-500 transition-transform flex-shrink-0 ${
                   expandedProjects.has(project._id) ? "rotate-90" : ""
                 }`}
               />
 
               <div className="size-2 shrink-0 rounded-full bg-blue-500" />
 
-              <span className="max-w-[140px] truncate">{project.name}</span>
+              <span className="flex-1 truncate text-left">{project.name}</span>
             </button>
 
             {expandedProjects.has(project._id) && (
-              <div className="ml-5 mt-1 space-y-1">
+              <div className="ml-4 sm:ml-5 mt-1 space-y-1">
                 {getProjectSubItems(project._id).map((item) => {
                   const isActive = location.pathname === item.path;
 
@@ -82,15 +82,16 @@ const ProjectSidebar = memo(() => {
                     <Link
                       key={item.title}
                       to={item.path}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-1.5 text-xs transition
+                      onClick={onLinkClick}
+                      className={`flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs transition
                         ${
                           isActive
                             ? "bg-blue-100 text-blue-600"
                             : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                         }`}
                     >
-                      <item.icon className="size-3" />
-                      {item.title}
+                      <item.icon className="size-3 flex-shrink-0" />
+                      <span className="truncate">{item.title}</span>
                     </Link>
                   );
                 })}
