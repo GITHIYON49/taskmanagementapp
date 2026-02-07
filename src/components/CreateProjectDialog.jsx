@@ -25,6 +25,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!formData.name.trim()) {
       toast.error("Project name is required");
       return;
@@ -35,15 +36,12 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
     try {
       const response = await projectAPI.create(formData);
       dispatch(addProject(response.data));
-
       toast.success("Project created successfully!");
       setIsDialogOpen(false);
       setFormData(initialFormState);
     } catch (error) {
-      console.error("Failed to create project", error);
-      const message =
-        error.response?.data?.message || "Failed to create project";
-      toast.error(message);
+      console.error("Failed to create project:", error);
+      toast.error(error.response?.data?.message || "Failed to create project");
     } finally {
       setIsSubmitting(false);
     }
@@ -52,8 +50,8 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
   if (!isDialogOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50">
-      <div className="bg-white border border-gray-200 rounded-xl p-6 w-full max-w-lg text-gray-900 relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur flex items-center justify-center z-50 p-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 w-full max-w-2xl text-gray-900 relative max-h-[90vh] overflow-y-auto">
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           onClick={() => setIsDialogOpen(false)}
@@ -61,12 +59,15 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
           <XIcon className="size-5" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Create New Project</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 pr-8">
+          Create New Project
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Project Name */}
           <div>
             <label className="block text-sm mb-1 font-medium">
-              Project Name
+              Project Name <span className="text-red-500">*</span>
             </label>
             <input
               value={formData.name}
@@ -77,6 +78,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             />
           </div>
 
+          {/* Description */}
           <div>
             <label className="block text-sm mb-1 font-medium">
               Description
@@ -84,12 +86,13 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             <textarea
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 rounded border border-gray-300 text-sm h-20 sm:h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Describe your project"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Status & Priority */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">Status</label>
               <select
@@ -99,9 +102,8 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
               >
                 <option value="PLANNING">Planning</option>
                 <option value="ACTIVE">Active</option>
-                <option value="COMPLETED">Completed</option>
                 <option value="ON_HOLD">On Hold</option>
-                <option value="CANCELLED">Cancelled</option>
+                <option value="COMPLETED">Completed</option>
               </select>
             </div>
 
@@ -119,7 +121,8 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Dates */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm mb-1 font-medium">
                 Start Date
@@ -137,25 +140,26 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
               <input
                 type="date"
                 value={formData.end_date}
-                min={formData.start_date}
                 onChange={(e) => handleChange("end_date", e.target.value)}
                 className="w-full px-3 py-2 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2 text-sm">
+          {/* Footer Buttons */}
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2 text-sm">
             <button
               type="button"
               onClick={() => setIsDialogOpen(false)}
-              className="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
+              className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 hover:bg-gray-100"
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
+              className="w-full sm:w-auto px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white disabled:opacity-50 hover:from-blue-600 hover:to-blue-700"
             >
               {isSubmitting ? "Creating..." : "Create Project"}
             </button>

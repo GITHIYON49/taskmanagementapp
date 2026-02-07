@@ -3,15 +3,20 @@ import { FolderKanban, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 
 const StatsGrid = () => {
   const projects = useSelector((state) => state.project?.projects || []);
-  const totalProjects = projects.length;
 
+  const totalProjects = projects.length;
+  
   const completedProjects = projects.filter(
-    (p) => p.status === "COMPLETED",
+    (p) => p.status === "COMPLETED"
   ).length;
 
-  const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
+  const activeProjects = projects.filter(
+    (p) => p.status === "ACTIVE"
+  ).length;
 
-  const onHoldProjects = projects.filter((p) => p.status === "ON_HOLD").length;
+  const onHoldProjects = projects.filter(
+    (p) => p.status === "ON_HOLD"
+  ).length;
 
   const stats = [
     {
@@ -45,21 +50,23 @@ const StatsGrid = () => {
   ];
 
   return (
-    <div className="my-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="rounded-lg border border-gray-200 bg-white p-6"
+          className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6"
         >
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
+                {stat.title}
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
                 {stat.value}
               </p>
             </div>
-            <div className={`rounded-full p-3 ${stat.bgColor}`}>
-              <stat.icon className={`h-6 w-6 ${stat.color}`} />
+            <div className={`rounded-full p-2 sm:p-3 ${stat.bgColor} flex-shrink-0 ml-2`}>
+              <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
             </div>
           </div>
         </div>

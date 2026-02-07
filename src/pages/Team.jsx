@@ -81,14 +81,6 @@ const Team = () => {
         )}
       </div>
 
-      {/* Show message if not authorized to invite */}
-      {!canInvite && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <p className="text-sm text-amber-800">
-            Only the team owner or admins can invite new members.
-          </p>
-        </div>
-      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

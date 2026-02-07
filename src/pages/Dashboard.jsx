@@ -55,20 +55,21 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
-      <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+    <div className="mx-auto max-w-7xl space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="mb-1 text-xl font-semibold text-gray-900 sm:text-2xl">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
             Welcome back, {user?.name || "User"}
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mt-1">
             Here's what's happening with your projects today
           </p>
         </div>
 
         <button
           onClick={() => setIsDialogOpen(true)}
-          className="flex items-center gap-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 px-5 py-2 text-sm text-white transition hover:opacity-90"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 px-5 py-2.5 text-sm text-white transition hover:opacity-90"
         >
           <Plus size={16} />
           New Project
@@ -82,8 +83,8 @@ const Dashboard = () => {
 
       <StatsGrid />
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-8 lg:col-span-2">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-3">
+        <div className="space-y-6 lg:space-y-8 lg:col-span-2">
           <ProjectOverview />
           <RecentActivity />
         </div>

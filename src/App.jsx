@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-
+import MyTasks from "./pages/MyTasks";
 
 import { loginSuccess, setLoading } from "./features/authSlice";
 import { getAuthData, verifyToken } from "./utils/authHelper";
@@ -115,8 +115,6 @@ const App = () => {
           }
         />
 
-       
-
         <Route
           path="/"
           element={
@@ -147,6 +145,7 @@ const App = () => {
             element={<TaskDetails />}
           />
 
+          <Route path="my-tasks" element={<MyTasks />} />
           <Route path="team" element={<Team />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
