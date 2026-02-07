@@ -1,47 +1,56 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+// Create axios instance
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   timeout: 10000,
+  withCredentials: true, // ✅ Important for CORS with credentials
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
+    console.log('📤 API Request:', config.method.toUpperCase(), config.url);
     return config;
   },
   (error) => {
-    console.error("📤 Request Error:", error);
+    console.error('📤 Request Error:', error);
     return Promise.reject(error);
-  },
+  }
 );
 
+// Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => {
+    console.log('📥 API Response:', response.config.url, response.status);
     return response;
   },
   (error) => {
-    console.error("📥 Response Error:", error.message);
-
+    console.error('📥 Response Error:', error.message);
+    
+    // If token is invalid or expired, logout user
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      console.log('❌ 401 Unauthorized - clearing auth');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
     }
-
-    if (error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
-      console.error("❌ Network Error - Backend not reachable");
+    
+    // Network error
+    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
+      console.error('❌ Network Error - Backend not reachable');
     }
-
+    
     return Promise.reject(error);
-  },
+  }
 );
 
 export const authAPI = {
