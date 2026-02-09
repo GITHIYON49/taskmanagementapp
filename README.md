@@ -6,8 +6,6 @@ TaskManager - Full Stack Task Management Application
 
 ### Authentication & Authorization
 - User registration and login with JWT authentication
-- Role-based access control (Admin/Member)
-- Team owner privileges for the first registered user
 - Password encryption with bcrypt
 - Persistent login sessions
 
