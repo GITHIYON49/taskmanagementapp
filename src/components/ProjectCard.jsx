@@ -30,19 +30,22 @@ const ProjectCard = ({ project }) => {
       <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 text-base sm:text-lg truncate">
-            {project.name}
+            {project.name || "Untitled Project"}
           </h3>
           <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
             {project.description || "No description"}
           </p>
         </div>
-        <span
-          className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
-            statusColors[project.status]
-          }`}
-        >
-          {project.status.replace("_", " ")}
-        </span>
+
+        {project.status && (
+          <span
+            className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
+              statusColors[project.status] || "bg-gray-200 text-gray-900"
+            }`}
+          >
+            {project.status.replace("_", " ")}
+          </span>
+        )}
       </div>
 
       <div className="mb-3 sm:mb-4">
@@ -82,11 +85,14 @@ const ProjectCard = ({ project }) => {
               : "No deadline"}
           </span>
         </div>
-        <span
-          className={`text-xs sm:text-sm font-medium ${priorityColors[project.priority]}`}
-        >
-          {project.priority} Priority
-        </span>
+
+        {project.priority && (
+          <span
+            className={`text-xs sm:text-sm font-medium ${priorityColors[project.priority] || "text-gray-500"}`}
+          >
+            {project.priority} Priority
+          </span>
+        )}
       </div>
     </Link>
   );

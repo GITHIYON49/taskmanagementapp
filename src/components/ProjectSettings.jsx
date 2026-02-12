@@ -107,11 +107,11 @@ const ProjectSettings = ({ project, onProjectUpdated }) => {
   };
 
   const handleMemberAdded = (updatedProject) => {
-    if (onProjectUpdated) {
-      onProjectUpdated(updatedProject);
+    if (updatedProject && updatedProject.members) {
+      if (onProjectUpdated) {
+        onProjectUpdated(updatedProject);
+      }
     }
-
-    toast.success("Member added successfully!");
   };
 
   return (

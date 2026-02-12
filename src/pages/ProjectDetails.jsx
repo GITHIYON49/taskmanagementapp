@@ -35,10 +35,10 @@ export default function ProjectDetail() {
 
   const getActiveTab = () => {
     const path = location.pathname;
-    if (path.includes('/analytics')) return 'analytics';
-    if (path.includes('/calendar')) return 'calendar';
-    if (path.includes('/settings')) return 'settings';
-    return 'tasks';
+    if (path.includes("/analytics")) return "analytics";
+    if (path.includes("/calendar")) return "calendar";
+    if (path.includes("/settings")) return "settings";
+    return "tasks";
   };
 
   const [activeTab, setActiveTab] = useState(getActiveTab());
@@ -55,7 +55,7 @@ export default function ProjectDetail() {
 
       try {
         const foundProject = projects.find(
-          (p) => String(p._id) === String(projectId)
+          (p) => String(p._id) === String(projectId),
         );
 
         if (foundProject) {
@@ -68,9 +68,9 @@ export default function ProjectDetail() {
         setProject(response.data);
         dispatch(updateSingleProject(response.data));
       } catch (error) {
-        console.error('Failed to load project:', error);
-        toast.error('Project not found');
-        navigate('/projects');
+        console.error("Failed to load project:", error);
+        toast.error("Project not found");
+        navigate("/projects");
       } finally {
         setLoading(false);
       }
@@ -102,7 +102,6 @@ export default function ProjectDetail() {
   const handleProjectUpdated = (updatedProject) => {
     setProject(updatedProject);
     dispatch(updateSingleProject(updatedProject));
-    toast.success('Project updated successfully!');
   };
 
   if (loading) {
@@ -131,7 +130,6 @@ export default function ProjectDetail() {
 
   return (
     <div className="space-y-4 sm:space-y-5 max-w-7xl mx-auto text-gray-900">
-      
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start justify-between">
         <div className="flex items-start gap-3 sm:gap-4 w-full sm:w-auto">
           <button
@@ -144,15 +142,18 @@ export default function ProjectDetail() {
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <h1 className="text-lg sm:text-xl font-medium truncate">
-                {project.name}
+                {project.name || "Untitled Project"}
               </h1>
-              <span
-                className={`px-2 py-1 rounded text-xs capitalize flex-shrink-0 ${
-                  statusColors[project.status]
-                }`}
-              >
-                {project.status.replace("_", " ")}
-              </span>
+
+              {project.status && (
+                <span
+                  className={`px-2 py-1 rounded text-xs capitalize flex-shrink-0 ${
+                    statusColors[project.status] || "bg-gray-200 text-gray-900"
+                  }`}
+                >
+                  {project.status.replace("_", " ")}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -166,7 +167,6 @@ export default function ProjectDetail() {
         </button>
       </div>
 
-      
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {[
           {
@@ -202,14 +202,14 @@ export default function ProjectDetail() {
                 {card.value}
               </div>
             </div>
-            <ZapIcon className={`size-4 sm:size-5 mt-2 sm:mt-0 ${card.color} self-end sm:self-start`} />
+            <ZapIcon
+              className={`size-4 sm:size-5 mt-2 sm:mt-0 ${card.color} self-end sm:self-start`}
+            />
           </div>
         ))}
       </div>
 
-     
       <div>
-       
         <div className="overflow-x-auto -mx-4 sm:mx-0">
           <div className="inline-flex min-w-full sm:min-w-0 px-4 sm:px-0 gap-1 sm:gap-2 border border-gray-200 rounded overflow-hidden">
             {[
@@ -232,7 +232,6 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        
         <div className="mt-4 sm:mt-6">
           {activeTab === "tasks" && (
             <ProjectTasks tasks={tasks} projectId={projectId} />
@@ -247,15 +246,14 @@ export default function ProjectDetail() {
           )}
 
           {activeTab === "settings" && (
-            <ProjectSettings 
-              project={project} 
+            <ProjectSettings
+              project={project}
               onProjectUpdated={handleProjectUpdated}
             />
           )}
         </div>
       </div>
 
-      
       {showCreateTask && (
         <CreateTaskDialog
           showCreateTask={showCreateTask}
