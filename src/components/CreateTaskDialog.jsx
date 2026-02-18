@@ -3,7 +3,7 @@ import { XIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { addTask } from "../features/projectSlice";
-import { taskAPI, userAPI } from "../services/api";
+import { taskAPI, projectAPI } from "../services/api";
 
 const initialFormState = {
   title: "",
@@ -18,29 +18,48 @@ const initialFormState = {
 const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth?.user);
+  const projects = useSelector((state) => state.project?.projects || []);
 
   const [formData, setFormData] = useState(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [availableUsers, setAvailableUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadProjectMembers = async () => {
+      setLoadingUsers(true);
       try {
-        const response = await userAPI.getAll();
-        setUsers(response.data);
+        let project = projects.find((p) => p._id === projectId);
+
+        if (!project || !project.members) {
+          const response = await projectAPI.getOne(projectId);
+          project = response.data;
+        }
+
+        const users =
+          project.members
+            ?.map((member) => {
+              if (member.user && typeof member.user === "object") {
+                return member.user;
+              }
+              return null;
+            })
+            .filter(Boolean) || [];
+
+        setAvailableUsers(users);
       } catch (error) {
-        console.error("Failed to load users:", error);
-        toast.error("Failed to load users");
+        console.error("Failed to load project members:", error);
+        toast.error("Failed to load team members");
+        setAvailableUsers([]);
       } finally {
         setLoadingUsers(false);
       }
     };
 
-    if (showCreateTask) {
-      loadUsers();
+    if (showCreateTask && projectId) {
+      loadProjectMembers();
     }
-  }, [showCreateTask]);
+  }, [showCreateTask, projectId, projects]);
 
   const handleChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -74,7 +93,9 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
       toast.success("Task created successfully!");
 
       if (formData.assignee && formData.assignee !== currentUser?._id) {
-        const assignedUser = users.find((u) => u._id === formData.assignee);
+        const assignedUser = availableUsers.find(
+          (u) => u._id === formData.assignee,
+        );
         if (assignedUser) {
           toast.success(
             `Task assigned to ${assignedUser.name}. Email notification sent!`,
@@ -185,7 +206,11 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
               </label>
               {loadingUsers ? (
                 <div className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-500">
-                  Loading users...
+                  Loading team members...
+                </div>
+              ) : availableUsers.length === 0 ? (
+                <div className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-500">
+                  No team members available
                 </div>
               ) : (
                 <select
@@ -197,8 +222,8 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
                   <option value={currentUser?._id}>
                     Me ({currentUser?.name})
                   </option>
-                  <optgroup label="Other Users">
-                    {users
+                  <optgroup label="Team Members">
+                    {availableUsers
                       .filter((u) => u._id !== currentUser?._id)
                       .map((user) => (
                         <option key={user._id} value={user._id}>
@@ -208,6 +233,10 @@ const CreateTaskDialog = ({ showCreateTask, setShowCreateTask, projectId }) => {
                   </optgroup>
                 </select>
               )}
+              <p className="text-xs text-gray-500 mt-1">
+                {availableUsers.length} team member
+                {availableUsers.length !== 1 ? "s" : ""} available
+              </p>
             </div>
           </div>
 

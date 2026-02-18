@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   projects: [],
+  currentProject: null,
   loading: false,
   error: null,
 };
@@ -125,8 +126,23 @@ const projectSlice = createSlice({
       );
 
       if (project) {
-        if (!project.members) project.members = [];
-        project.members.push(member);
+        if (!project.members) {
+          project.members = [];
+        }
+
+        const memberExists = project.members.some((m) => {
+          const existingUserId = m.user?._id || m.user;
+          const newUserId = member.user?._id || member.user;
+          return String(existingUserId) === String(newUserId);
+        });
+
+        if (!memberExists) {
+          project.members.push(member);
+        } else {
+          console.log("Member already exists in project");
+        }
+      } else {
+        console.error("Project not found");
       }
     },
 
@@ -138,9 +154,10 @@ const projectSlice = createSlice({
       );
 
       if (project && project.members) {
-        project.members = project.members.filter(
-          (m) => String(m.user._id) !== String(userId),
-        );
+        project.members = project.members.filter((m) => {
+          const memberId = m.user?._id || m.user;
+          return String(memberId) !== String(userId);
+        });
       }
     },
 
@@ -192,6 +209,15 @@ const projectSlice = createSlice({
 
       if (index !== -1) {
         state.projects[index] = updatedProject;
+      } else {
+        console.error("Project not found for update");
+      }
+
+      if (
+        state.currentProject &&
+        String(state.currentProject._id) === String(updatedProject._id)
+      ) {
+        state.currentProject = updatedProject;
       }
     },
   },
